@@ -1,6 +1,6 @@
 import tensorflow as tf
-import win19_dep9 as net19
-import win37_dep9 as net37
+import models.win19_dep9 as net19
+import models.win37_dep9 as net37
 from tensorflow.python.ops import control_flow_ops
 slim = tf.contrib.slim
 

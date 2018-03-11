@@ -1,6 +1,6 @@
 import tensorflow as tf
 import os
-import net_factory as nf
+import models.net_factory as nf
 import numpy as np
 from data_handler import Data_handler
 
