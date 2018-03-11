@@ -31,7 +31,7 @@ FLAGS = flags.FLAGS
 
 np.random.seed(123)
 
-file_ids = np.fromfile(FLAGS.util_root, 'myPerm.bin'), '<f4')
+file_ids = np.fromfile(os.path.join(FLAGS.util_root, 'myPerm.bin'), '<f4')
 
 if FLAGS.data_version == 'kitti2015':
     num_channels = 3
@@ -86,13 +86,14 @@ with tf.Session() as session:
             unary_vol = np.zeros((limage_map.shape[1], limage_map.shape[2], FLAGS.disp_range))
 
             for loc in range(FLAGS.disp_range):
-                print('loc: %d' % loc)
                 x_off = -loc
                 l = limage_map[:, :, max(0, -x_off): map_width,:]
                 r = rimage_map[:, :, 0: min(map_width, map_width + x_off),:]
                 res = session.run(map_prod, feed_dict={lmap: l, rmap: r})
 
                 unary_vol[:, max(0, -x_off): map_width, loc] = res[0, :, :]
+
+            print('Image %s processed.' % (i + 1))
             pred = np.argmax(unary_vol, axis=2) * scale_factor
 
 

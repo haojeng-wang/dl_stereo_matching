@@ -15,7 +15,7 @@ def three_pixel_error(lbranch, rbranch, targets):
 	return prod_flatten, loss
 
 def create(limage, rimage, targets, net_type='win37_dep9'):
-	is_training = tf.placeholder(tf.bool, [])
+	is_training = tf.placeholder(tf.bool, [], name='is_training')
 	with tf.name_scope('siamese_' + net_type):
 		if net_type == 'win37_dep9':
 			lbranch = net37.create_network(limage, is_training, reuse=False)
@@ -29,7 +29,7 @@ def create(limage, rimage, targets, net_type='win37_dep9'):
 
 		prod_flatten, loss = three_pixel_error(lbranch, rbranch, targets)
 
-		lrate = 1e-2
+		lrate = tf.placeholder(tf.float32, [], name='lrate')
 		with tf.name_scope("optimizer"):
 			global_step = tf.get_variable("global_step", [], initializer=tf.constant_initializer(0.0), trainable=False)
 			optimizer = tf.train.AdagradOptimizer(lrate)
@@ -39,16 +39,16 @@ def create(limage, rimage, targets, net_type='win37_dep9'):
 			if update_ops:
 				updates = tf.group(*update_ops)
 				loss = control_flow_ops.with_dependencies([updates], loss)
-			# train_step = tf.train.AdagradOptimizer(lrate).minimize(loss, global_step=global_step)
 
 		net = {'lbranch': lbranch, 'rbranch': rbranch, 'loss': loss, 
 			'inner_product': prod_flatten, 'train_step': train_step, 
-			'is_training': is_training, 'global_step': global_step}
+			'is_training': is_training, 'global_step': global_step, 'lrate': lrate}
 
 	return net
 
 
 def map_inner_product(lmap, rmap):
 	prod = tf.reduce_sum(tf.multiply(lmap, rmap), axis=3, name='map_inner_product')
+	
 	return prod
 

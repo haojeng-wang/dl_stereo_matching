@@ -28,10 +28,9 @@ FLAGS = flags.FLAGS
 
 np.random.seed(123)
 
-#TODO: CHANGE DATA ROOT AND UTIL TO FLAGS VALUES
 dhandler = Data_handler(data_version=FLAGS.data_version, 
-	data_root=os.path.expanduser('~/scratch/algolux/training'),  
-	util_root=os.path.expanduser('~/scratch/algolux/cvpr16_stereo_public/preprocess/debug_12'), 
+	data_root=FLAGS.data_root,  
+	util_root=FLAGS.util_root, 
 	num_tr_img=FLAGS.num_tr_img, 
 	num_val_img=FLAGS.num_val_img, 
 	num_val_loc=FLAGS.num_val_loc, 
@@ -75,11 +74,13 @@ def train():
 		saver = tf.train.Saver(max_to_keep=1)
 		losses = []
 		summary_index = 1
+		lrate = 1e-2
 
 		for it in range(1, FLAGS.num_iter):
 			lpatch, rpatch, patch_targets = dhandler.next_batch()
 
-			train_dict = {limage:lpatch, rimage:rpatch, targets:patch_targets, snet['is_training']: True}
+			train_dict = {limage:lpatch, rimage:rpatch, targets:patch_targets, 
+						snet['is_training']: True, snet['lrate']: lrate}
 			_, mini_loss = session.run([train_step, loss], feed_dict=train_dict)
 			losses.append(mini_loss)
 
