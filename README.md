@@ -3,9 +3,13 @@ A Tensorflow implementation of the models described in the paper [Efficient Deep
 This implementation is based on the one provided by the authors of the paper 
 at: https://bitbucket.org/saakuraa/cvpr16_stereo_public/overview
 
-win37_dep9 architecture example:
+### Architecture of the win37_dep9 network:
+#### Global view
 ![](figures/win_37_dep9_graph.png)
+#### Detailed view
+![](figures/win_37_dep9_graph_detail.png)
 
+### Results
 Current results using win19_dep9 and win37_dep9 architectures, trained over 24 000 training steps (batch size = 128).
 
 | Network  | Val. >3 error | Test >3 error | Runtime (sec.) |
@@ -13,7 +17,7 @@ Current results using win19_dep9 and win37_dep9 architectures, trained over 24 0
 | win19_dep9   |  10.00 | x   |  x |
 | win37_dep9  | 7.59  | y   |  x |
 
-
+### Training
 Cross-entropy Loss evolution (horizontal axes represent the the number of iterations * 100):
 (green=win19_dep9, yellow=win37_dep9)
 
